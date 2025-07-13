@@ -74,7 +74,7 @@ if city == "➕ Add Custom Weather":
 
 else:
     weather = st.session_state.city_weather_session[city]
-    st.write(f"Selected city weather data: {weather}")
+    #st.write(f"Selected city weather data: {weather}")
 
 # Glass selector function
 def glass_selector(position):
