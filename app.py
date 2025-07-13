@@ -39,29 +39,42 @@ if "glass_props_session" not in st.session_state:
 st.set_page_config(page_title="Thermal comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
-# --- City or Custom Weather Selection ---
-city_options = list(city_weather.keys()) + ["➕ Add Custom Weather"]
+# Initialize session state dict
+if "city_weather_session" not in st.session_state:
+    st.session_state.city_weather_session = copy.deepcopy(default_city_weather)
+
+# Build city list from session_state dict keys
+city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]
 city = st.selectbox("Select City or Add Custom", city_options)
 
 if city == "➕ Add Custom Weather":
-    st.markdown("### 🌦️ Enter Custom City and Weather Conditions")
-    custom_city = st.text_input("Enter Custom City Name")
+    new_city_name = st.text_input("Enter new city name")
     temp = st.slider("Ambient Temperature (°C)", 20, 50, 35)
     solar = st.slider("Solar Flux (W/m²)", 500, 1200, 900)
     humidity = st.slider("Humidity (%)", 10, 100, 50)
     wind = st.slider("Wind Speed (km/h)", 0, 30, 10)
     cloud = st.slider("Cloud Coverage (%)", 0, 100, 20)
 
-    weather = {
-        "Tempearture": temp,
-        "SolarFlux": solar,
-        "Humidity": humidity,
-        "WindSpeed": wind,
-        "CloudCoverage": cloud
-    }
-    st.success("✅ Custom weather conditions applied.")
+    if st.button("Add City"):
+        if not new_city_name:
+            st.warning("Please enter a city name.")
+        elif new_city_name in st.session_state.city_weather_session:
+            st.warning("City already exists.")
+        else:
+            st.session_state.city_weather_session[new_city_name] = {
+                "Tempearture": temp,
+                "SolarFlux": solar,
+                "Humidity": humidity,
+                "WindSpeed": wind,
+                "CloudCoverage": cloud
+            }
+            st.success(f"City '{new_city_name}' added.")
+            # Optionally reset the selectbox to new city
+            st.experimental_rerun()
+
 else:
-    weather = city_weather[city]
+    weather = st.session_state.city_weather_session[city]
+    st.write(f"Selected city weather data: {weather}")
 
 # Glass selector function
 def glass_selector(position):
