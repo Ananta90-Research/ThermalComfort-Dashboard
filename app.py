@@ -44,7 +44,8 @@ city_options = list(city_weather.keys()) + ["➕ Add Custom Weather"]
 city = st.selectbox("Select City or Add Custom", city_options)
 
 if city == "➕ Add Custom Weather":
-    st.markdown("### 🌦️ Enter Custom Weather Conditions")
+    st.markdown("### 🌦️ Enter Custom City and Weather Conditions")
+    custom_city = st.text_input("Enter Custom City Name")
     temp = st.slider("Ambient Temperature (°C)", 20, 50, 35)
     solar = st.slider("Solar Flux (W/m²)", 500, 1200, 900)
     humidity = st.slider("Humidity (%)", 10, 100, 50)
