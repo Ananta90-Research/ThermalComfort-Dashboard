@@ -75,6 +75,7 @@ if city == "➕ Add Custom Weather":
 else:
     weather = st.session_state.city_weather_session[city]
     #st.write(f"Selected city weather data: {weather}")
+
 with st.expander("🗑️ Manage Custom Cities", expanded=False):
     default_cities = list(city_weather.keys())
     custom_cities = [c for c in st.session_state.city_weather_session if c not in default_cities]
@@ -85,8 +86,6 @@ with st.expander("🗑️ Manage Custom Cities", expanded=False):
             del st.session_state.city_weather_session[city_to_delete]
             st.success(f"✅ City '{city_to_delete}' deleted.")
             st.experimental_rerun()
-    else:
-        st.info("No custom cities to delete.")
     
 # Glass selector function
 def glass_selector(position):
@@ -123,6 +122,7 @@ t_ws, Te_ws, Tts_ws = glass_selector("Windshield")
 t_sl, Te_sl, Tts_sl = glass_selector("Sidelite")
 t_bl, Te_bl, Tts_bl = glass_selector("Backlite")
 t_roof, Te_roof, Tts_roof = glass_selector("Roof")
+
 # ------------------ Delete Custom Glass ------------------
 with st.expander("🗑️ Manage Custom Glass Types", expanded=False):
     for position in ["Windshield", "Sidelite", "Backlite", "Roof"]:
