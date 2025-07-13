@@ -35,9 +35,6 @@ glass_props = {
 st.set_page_config(page_title="Thermal comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
-# Show car image (optional)
-st.image("Car.jpg", caption="Vehicle Cabin View", use_column_width=True)
-
 # --- City or Custom Weather Selection ---
 city_options = list(city_weather.keys()) + ["➕ Add Custom Weather"]
 city = st.selectbox("Select City or Add Custom", city_options)
@@ -111,8 +108,3 @@ input_row = pd.DataFrame([{
 if st.button("🔍 Predict Cabin Temperature"):
     prediction = model.predict(input_row)[0]
     st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
-
-    # Save to CSV
-    input_row["Predicted Cabin_Air_Tempearture"] = prediction
-    input_row.to_csv("cabin_temp_result.csv", index=False)
-    st.info("📁 Saved to `cabin_temp_result.csv` in the current directory.")
