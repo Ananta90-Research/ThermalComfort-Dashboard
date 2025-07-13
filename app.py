@@ -41,7 +41,7 @@ st.title("🚗 Thermal Comfort Dashboard")
 
 # Initialize session state dict
 if "city_weather_session" not in st.session_state:
-    st.session_state.city_weather_session = copy.deepcopy(default_city_weather)
+    st.session_state.city_weather_session = copy.deepcopy(city_weather)
 
 # Build city list from session_state dict keys
 city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]
