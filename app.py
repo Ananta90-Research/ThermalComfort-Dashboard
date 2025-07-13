@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-
+import copy
 
 # Load trained model (no preprocessor)
 model = joblib.load('ThermalComfort_prediction_model.pkl')
