@@ -76,6 +76,19 @@ else:
     weather = st.session_state.city_weather_session[city]
     #st.write(f"Selected city weather data: {weather}")
 
+st.markdown("### 🗑️ Delete Custom Cities")
+default_cities = list(city_weather.keys())
+custom_cities = [c for c in st.session_state.city_weather_session if c not in default_cities]
+
+if custom_cities:
+    city_to_delete = st.selectbox("Select custom city to delete", custom_cities, key="delete_city")
+    if st.button("Delete Selected City"):
+        del st.session_state.city_weather_session[city_to_delete]
+        st.success(f"✅ City '{city_to_delete}' deleted.")
+        st.experimental_rerun()
+else:
+    st.info("No custom cities to delete.")
+    
 # Glass selector function
 def glass_selector(position):
     glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
@@ -111,6 +124,19 @@ t_ws, Te_ws, Tts_ws = glass_selector("Windshield")
 t_sl, Te_sl, Tts_sl = glass_selector("Sidelite")
 t_bl, Te_bl, Tts_bl = glass_selector("Backlite")
 t_roof, Te_roof, Tts_roof = glass_selector("Roof")
+# ------------------ Delete Custom Glass ------------------
+st.markdown("### 🗑️ Delete Custom Glass Types")
+for position in ["Windshield", "Sidelite", "Backlite", "Roof"]:
+    default_glasses = list(glass_props[position].keys())
+    custom_glasses = [g for g in st.session_state.glass_props_session[position] if g not in default_glasses]
+    
+    if custom_glasses:
+        st.subheader(position)
+        glass_to_delete = st.selectbox(f"Select glass to delete from {position}", custom_glasses, key=f"del_{position}")
+        if st.button(f"Delete from {position}", key=f"btn_{position}"):
+            del st.session_state.glass_props_session[position][glass_to_delete]
+            st.success(f"✅ Glass '{glass_to_delete}' deleted from {position}.")
+            st.experimental_rerun()
 
 # Build input row
 input_row = pd.DataFrame([{
