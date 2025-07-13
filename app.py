@@ -33,6 +33,9 @@ glass_props = {
         "VG20": {"Te": 0.165, "t":3.85, "Tts": 0.383}}
 }
 
+if "glass_props_session" not in st.session_state:
+    st.session_state.glass_props_session = copy.deepcopy(glass_props)
+
 st.set_page_config(page_title="Thermal comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
