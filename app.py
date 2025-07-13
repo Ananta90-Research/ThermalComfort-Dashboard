@@ -76,7 +76,7 @@ else:
     weather = st.session_state.city_weather_session[city]
     #st.write(f"Selected city weather data: {weather}")
 
-st.markdown("### 🗑️ Delete Custom Cities")
+with st.expander("🗑️ Manage Custom Cities", expanded=False):
 default_cities = list(city_weather.keys())
 custom_cities = [c for c in st.session_state.city_weather_session if c not in default_cities]
 
@@ -125,7 +125,7 @@ t_sl, Te_sl, Tts_sl = glass_selector("Sidelite")
 t_bl, Te_bl, Tts_bl = glass_selector("Backlite")
 t_roof, Te_roof, Tts_roof = glass_selector("Roof")
 # ------------------ Delete Custom Glass ------------------
-st.markdown("### 🗑️ Delete Custom Glass Types")
+with st.expander("🗑️ Manage Custom Glass Types", expanded=False):
 for position in ["Windshield", "Sidelite", "Backlite", "Roof"]:
     default_glasses = list(glass_props[position].keys())
     custom_glasses = [g for g in st.session_state.glass_props_session[position] if g not in default_glasses]
