@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-import logging
-logging.basicConfig(level=logging.DEBUG)
+
 
 # Load trained model (no preprocessor)
 model = joblib.load('ThermalComfort_prediction_model.pkl')
@@ -62,7 +61,7 @@ else:
 
 # Glass selector function
 def glass_selector(position):
-    glass_list = list(glass_props[position].keys()) + ["➕ Add New Glass Type"]
+    glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
     selected = st.selectbox(f"{position} Glass Type", glass_list, key=position)
 
     if selected == "➕ Add New Glass Type":
@@ -73,19 +72,22 @@ def glass_selector(position):
             new_Tts = st.slider("Transmitted Solar Energy", 0.0, 0.7, 0.3, key=f"{position}_Tts")
 
             if st.button("Add", key=f"{position}_add"):
-                if new_name and new_name not in glass_props[position]:
-                    glass_props[position][new_name] = {
+                if new_name and new_name not in st.session_state.glass_props_session[position]:
+                    st.session_state.glass_props_session[position][new_name] = {
                         "Te": new_trans,
                         "t": new_thick,
                         "Tts": new_Tts
                     }
                     st.success(f"✅ Added '{new_name}' to {position}")
-                    return new_thick, new_trans, new_Tts
                 else:
                     st.warning("Name exists or is empty. Please enter a unique name.")
-                    return list(glass_props[position].values())[0].values()
 
-    props = glass_props[position][selected]
+    # Return properties for the selected glass (if exists)
+    props = st.session_state.glass_props_session[position].get(selected, None)
+    if props is None:
+        # fallback to first glass type to avoid KeyError
+        fallback = list(st.session_state.glass_props_session[position].values())[0]
+        return fallback["t"], fallback["Te"], fallback["Tts"]
     return props["t"], props["Te"], props["Tts"]
 
 t_ws, Te_ws, Tts_ws = glass_selector("Windshield")
