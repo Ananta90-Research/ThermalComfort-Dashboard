@@ -44,7 +44,7 @@ if "city_weather_session" not in st.session_state:
     st.session_state.city_weather_session = copy.deepcopy(city_weather)
 
 # Build city list from session_state dict keys
-city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]+ ["🗑️ Manage Custom Cities"]
+city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]
 city = st.selectbox("Select City or Add Custom", city_options)
 
 if city == "➕ Add Custom Weather":
@@ -75,7 +75,7 @@ if city == "➕ Add Custom Weather":
 else:
     weather = st.session_state.city_weather_session[city]
     #st.write(f"Selected city weather data: {weather}")
-if city == "🗑️ Manage Custom Cities":
+with st.expander("🗑️ Manage Custom wetaher", expanded=False):
     default_cities = list(city_weather.keys())
     custom_cities = [c for c in st.session_state.city_weather_session if c not in default_cities]
     if custom_cities:
