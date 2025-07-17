@@ -70,7 +70,7 @@ if city == "➕ Add Custom Weather":
             }
             st.success(f"City '{new_city_name}' added.")
             # Optionally reset the selectbox to new city
-            st.experimental_rerun()
+            st.rerun()
 
 else:
     weather = st.session_state.city_weather_session[city]
@@ -83,7 +83,7 @@ with st.expander("🗑️ Manage Custom wetaher", expanded=False):
         if st.button("Delete Selected City"):
             del st.session_state.city_weather_session[city_to_delete]
             st.success(f"✅ City '{city_to_delete}' deleted.")
-            st.experimental_rerun()
+            st.rerun()
     
 # Glass selector function
 def glass_selector(position):
@@ -133,7 +133,7 @@ with st.expander("🗑️ Manage Custom Glass Types", expanded=False):
             if st.button(f"Delete from {position}", key=f"btn_{position}"):
                 del st.session_state.glass_props_session[position][glass_to_delete]
                 st.success(f"✅ Glass '{glass_to_delete}' deleted from {position}.")
-                st.experimental_rerun()
+                st.rerun()
 
 # Build input row
 input_row = pd.DataFrame([{
