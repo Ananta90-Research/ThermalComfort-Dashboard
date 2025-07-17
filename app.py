@@ -4,144 +4,151 @@ import numpy as np
 import joblib
 import copy
 
-# Load model
+# Load trained model (no preprocessor)
 model = joblib.load('ThermalComfort_prediction_model.pkl')
 
-# Default data
+# Weather data for each city
 city_weather = {
     "Mumbai": {"Tempearture": 31, "SolarFlux": 932, "Humidity": 65, "WindSpeed": 4, "CloudCoverage": 5},
     "Jodhpur": {"Tempearture": 40, "SolarFlux": 925, "Humidity": 25, "WindSpeed": 1, "CloudCoverage": 5},
     "Bengaluru": {"Tempearture": 28, "SolarFlux": 946, "Humidity": 54, "WindSpeed": 3, "CloudCoverage": 3}
 }
+
+# Glass properties
 glass_props = {
     "Windshield": {
         "TSANx//TSANx": {"Te": 0.536, "t": 5.0, "Tts": 0.647},
         "TSA3+//TSA3+": {"Te": 0.425, "t": 5.0, "Tts": 0.568},
-        "TSANx//TSA3+": {"Te": 0.449, "t": 5.0, "Tts": 0.585}
-    },
+        "TSANx//TSA3+": {"Te": 0.449, "t": 5.0, "Tts": 0.585}},
     "Sidelite": {
         "TSANx": {"Te": 0.634, "t": 3.2, "Tts": 0.720},
         "TSA3+": {"Te": 0.496, "t": 3.2, "Tts": 0.619},
-        "Inshade": {"Te": 0.401, "t": 3.2, "Tts": 0.521}
-    },
+        "Inshade": {"Te": 0.401, "t": 3.2, "Tts": 0.521}},
     "Backlite": {
         "TSANx": {"Te": 0.634, "t": 3.2, "Tts": 0.720},
         "TSA3+": {"Te": 0.496, "t": 3.2, "Tts": 0.619},
-        "TSA5+": {"Te": 0.360, "t": 3.2, "Tts": 0.522}
-    },
+        "TSA5+": {"Te": 0.360, "t": 3.2, "Tts": 0.522}},
     "Roof": {
-        "VG10": {"Te": 0.1, "t": 3.85, "Tts": 0.336},
-        "VG20": {"Te": 0.165, "t": 3.85, "Tts": 0.383}
-    }
+        "VG10": {"Te": 0.1, "t":3.85, "Tts": 0.336},
+        "VG20": {"Te": 0.165, "t":3.85, "Tts": 0.383}}
 }
 
-# Session state init
-if "city_weather_session" not in st.session_state:
-    st.session_state.city_weather_session = copy.deepcopy(city_weather)
 if "glass_props_session" not in st.session_state:
     st.session_state.glass_props_session = copy.deepcopy(glass_props)
 
-st.set_page_config(page_title="Thermal Comfort Predictor", layout="centered")
+st.set_page_config(page_title="Thermal comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
-# Callback definitions
-def delete_city():
-    ct = st.session_state.delete_city
-    del st.session_state.city_weather_session[ct]
-    st.experimental_rerun()
+# Initialize session state dict
+if "city_weather_session" not in st.session_state:
+    st.session_state.city_weather_session = copy.deepcopy(city_weather)
 
-def make_delete_glass_cb(position):
-    def cb():
-        name = st.session_state[f"sel_{position}"]
-        del st.session_state.glass_props_session[position][name]
-        # Clear selectbox key
-        del st.session_state[f"sel_{position}"]
-        st.experimental_rerun()
-    return cb
+# Build city list from session_state dict keys
+city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]+ ["🗑️ Manage Custom Cities"]
+city = st.selectbox("Select City or Add Custom", city_options)
 
-# City selector with add/delete
-city_opts = list(st.session_state.city_weather_session.keys()) + ["➕ Add City","🗑️ Delete City"]
-city = st.selectbox("Select City or Action", city_opts)
-
-if city == "➕ Add City":
-    new_city = st.text_input("City Name")
-    temp = st.slider("Temperature (°C)", 20, 50, 35)
+if city == "➕ Add Custom Weather":
+    new_city_name = st.text_input("Enter new city name")
+    temp = st.slider("Ambient Temperature (°C)", 20, 50, 35)
     solar = st.slider("Solar Flux (W/m²)", 500, 1200, 900)
     humidity = st.slider("Humidity (%)", 10, 100, 50)
     wind = st.slider("Wind Speed (km/h)", 0, 30, 10)
     cloud = st.slider("Cloud Coverage (%)", 0, 100, 20)
+
     if st.button("Add City"):
-        if new_city and new_city not in st.session_state.city_weather_session:
-            st.session_state.city_weather_session[new_city] = {
-                "Tempearture": temp, "SolarFlux": solar,
-                "Humidity": humidity, "WindSpeed": wind, "CloudCoverage": cloud
-            }
-            st.success(f"City '{new_city}' added.")
-            st.experimental_rerun()
+        if not new_city_name:
+            st.warning("Please enter a city name.")
+        elif new_city_name in st.session_state.city_weather_session:
+            st.warning("City already exists.")
         else:
-            st.warning("Enter a unique city name.")
-elif city == "🗑️ Delete City":
-    defaults = set(city_weather.keys())
-    customs = [c for c in st.session_state.city_weather_session if c not in defaults]
-    if customs:
-        st.selectbox("Delete city", customs, key="delete_city")
-        st.button("Delete", on_click=delete_city)
-    else:
-        st.info("No custom cities to delete.")
-    st.stop()
+            st.session_state.city_weather_session[new_city_name] = {
+                "Tempearture": temp,
+                "SolarFlux": solar,
+                "Humidity": humidity,
+                "WindSpeed": wind,
+                "CloudCoverage": cloud
+            }
+            st.success(f"City '{new_city_name}' added.")
+            # Optionally reset the selectbox to new city
+            st.experimental_rerun()
+
 else:
     weather = st.session_state.city_weather_session[city]
-
-# Inline glass selector with add & delete
+    #st.write(f"Selected city weather data: {weather}")
+if city == "🗑️ Manage Custom Cities":
+    default_cities = list(city_weather.keys())
+    custom_cities = [c for c in st.session_state.city_weather_session if c not in default_cities]
+    if custom_cities:
+        city_to_delete = st.selectbox("Select custom city to delete", custom_cities, key="delete_city")
+        if st.button("Delete Selected City"):
+            del st.session_state.city_weather_session[city_to_delete]
+            st.success(f"✅ City '{city_to_delete}' deleted.")
+            st.experimental_rerun()
+    
+# Glass selector function
 def glass_selector(position):
-    session = st.session_state.glass_props_session[position]
-    default_set = set(glass_props[position].keys())
-    opts = list(session.keys()) + ["➕ Add New"]
-    selected = st.selectbox(f"{position} glass", opts, key=f"sel_{position}")
+    glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
+    selected = st.selectbox(f"{position} Glass Type", glass_list, key=position)
 
-    # Show delete button only for custom
-    if selected != "➕ Add New" and selected not in default_set:
-        st.button("🗑️ Delete this glass", on_click=make_delete_glass_cb(position), key=f"btn_del_{position}")
+    if selected == "➕ Add New Glass Type":
+        with st.expander(f"Add New Glass Type to {position}"):
+            new_name = st.text_input("Glass Name", key=f"{position}_name")
+            new_trans = st.slider("Transmittance", 0.2, 0.9, 0.6, key=f"{position}_Te")
+            new_thick = st.slider("Thickness (mm)", 3.0, 6.0, 4.5, key=f"{position}_t")
+            new_Tts = st.slider("Transmitted Solar Energy", 0.0, 0.7, 0.3, key=f"{position}_Tts")
 
-    # Add new type
-    if selected == "➕ Add New":
-        with st.expander(f"Add new {position} glass"):
-            n = st.text_input("Name", key=f"{position}_n")
-            te = st.slider("Transmittance", 0.2, 0.9, 0.6, key=f"{position}_te")
-            t = st.slider("Thickness (mm)", 3.0, 6.0, 4.5, key=f"{position}_t")
-            tts = st.slider("Transmitted Solar Energy", 0.0, 0.7, 0.3, key=f"{position}_tts")
-            if st.button("Add Glass", key=f"add_{position}"):
-                if n and n not in session:
-                    session[n] = {"Te": te, "t": t, "Tts": tts}
-                    st.success(f"Glass '{n}' added.")
+            if st.button("Add", key=f"{position}_add"):
+                if new_name and new_name not in st.session_state.glass_props_session[position]:
+                    st.session_state.glass_props_session[position][new_name] = {
+                        "Te": new_trans,
+                        "t": new_thick,
+                        "Tts": new_Tts
+                    }
+                    st.success(f"✅ Added '{new_name}' to {position}")
                 else:
-                    st.warning("Enter a unique name.")
+                    st.warning("Name exists or is empty. Please enter a unique name.")
 
-    # Fetch properties (fallback to any valid)
-    props = session.get(selected) if selected != "➕ Add New" else None
+    # Return properties for the selected glass (if exists)
+    props = st.session_state.glass_props_session[position].get(selected, None)
     if props is None:
-        props = next(iter(session.values()))
-
+        # fallback to first glass type to avoid KeyError
+        fallback = list(st.session_state.glass_props_session[position].values())[0]
+        return fallback["t"], fallback["Te"], fallback["Tts"]
     return props["t"], props["Te"], props["Tts"]
 
-# Collect glass data
 t_ws, Te_ws, Tts_ws = glass_selector("Windshield")
 t_sl, Te_sl, Tts_sl = glass_selector("Sidelite")
 t_bl, Te_bl, Tts_bl = glass_selector("Backlite")
-t_rf, Te_rf, Tts_rf = glass_selector("Roof")
+t_roof, Te_roof, Tts_roof = glass_selector("Roof")
 
-# Prediction action
+# ------------------ Delete Custom Glass ------------------
+with st.expander("🗑️ Manage Custom Glass Types", expanded=False):
+    for position in ["Windshield", "Sidelite", "Backlite", "Roof"]:
+        default_glasses = list(glass_props[position].keys())
+        custom_glasses = [g for g in st.session_state.glass_props_session[position] if g not in default_glasses]
+        
+        if custom_glasses:
+            st.subheader(position)
+            glass_to_delete = st.selectbox(f"Select glass to delete from {position}", custom_glasses, key=f"del_{position}")
+            if st.button(f"Delete from {position}", key=f"btn_{position}"):
+                del st.session_state.glass_props_session[position][glass_to_delete]
+                st.success(f"✅ Glass '{glass_to_delete}' deleted from {position}.")
+                st.experimental_rerun()
+
+# Build input row
+input_row = pd.DataFrame([{
+    "SolarFlux": weather["SolarFlux"],
+    "Tempearture": weather["Tempearture"],
+    "WindSpeed": weather["WindSpeed"],
+    "CloudCoverage": weather["CloudCoverage"],
+    "Humidity": weather["Humidity"],
+    "t(WS)": t_ws, "Te(WS)": Te_ws, "Tts(WS)": Tts_ws,
+    "t(SL)": t_sl, "Te(SL)": Te_sl, "Tts(SL)": Tts_sl,
+    "t(BL)": t_bl, "Te(BL)": Te_bl, "Tts(BL)": Tts_bl,
+    "t(roof)": t_roof, "Te(roof)": Te_roof, "Tts(roof)": Tts_roof
+}])
+
+# Predict and export
 if st.button("🔍 Predict Cabin Temperature"):
-    df = pd.DataFrame([{
-        "SolarFlux": weather["SolarFlux"],
-        "Tempearture": weather["Tempearture"],
-        "WindSpeed": weather["WindSpeed"],
-        "CloudCoverage": weather["CloudCoverage"],
-        "Humidity": weather["Humidity"],
-        "t(WS)": t_ws, "Te(WS)": Te_ws, "Tts(WS)": Tts_ws,
-        "t(SL)": t_sl, "Te(SL)": Te_sl, "Tts(SL)": Tts_sl,
-        "t(BL)": t_bl, "Te(BL)": Te_bl, "Tts(BL)": Tts_bl,
-        "t(roof)": t_rf, "Te(roof)": Te_rf, "Tts(roof)": Tts_rf
-    }])
-    pred = model.predict(df)[0]
-    st.success(f"🌡️ Predicted Cabin Temperature: **{pred:.2f} °C**")
+    prediction = model.predict(input_row)[0]
+    st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
