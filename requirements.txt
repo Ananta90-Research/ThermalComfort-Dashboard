@@ -3,5 +3,3 @@ pandas
 joblib
 scikit-learn
 openpyxl
-clickable-images
-st_clickable-images
