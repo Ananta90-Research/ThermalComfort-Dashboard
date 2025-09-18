@@ -126,13 +126,14 @@ input_row = pd.DataFrame([{
     "WindSpeed": weather["WindSpeed"],
     "CloudCoverage": weather["CloudCoverage"],
     "Humidity": weather["Humidity"],
-    "t(WS)": t_ws, "Te(WS)": Te_ws, "Tts(WS)": Tts_ws,
-    "t(SL)": t_sl, "Te(SL)": Te_sl, "Tts(SL)": Tts_sl,
-    "t(BL)": t_bl, "Te(BL)": Te_bl, "Tts(BL)": Tts_bl,
-    "t(roof)": t_roof, "Te(roof)": Te_roof, "Tts(roof)": Tts_roof
+    "Te(WS)": Te_ws, "Tts(WS)": Tts_ws,
+     "Te(SL)": Te_sl, "Tts(SL)": Tts_sl,
+     "Te(BL)": Te_bl, "Tts(BL)": Tts_bl,
+     "Te(roof)": Te_roof, "Tts(roof)": Tts_roof
 }])
 
 # Predict and export
 if st.button("🔍 Predict Cabin Temperature"):
     prediction = model.predict(input_row)[0]
     st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
+
