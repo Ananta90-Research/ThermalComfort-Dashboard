@@ -19,18 +19,25 @@ glass_props = {
     "Windshield": {
         "TSANx//TSANx": {"Te": 0.536, "t": 5.0, "Tts": 0.647},
         "TSA3+//TSA3+": {"Te": 0.425, "t": 5.0, "Tts": 0.568},
-        "TSANx//TSA3+": {"Te": 0.449, "t": 5.0, "Tts": 0.585}},
+        "TSANx//TSA3+": {"Te": 0.449, "t": 5.0, "Tts": 0.585},
+        "CLR(IRR coating)//TSANx": {"Te": 0.293, "t": 5.0, "Tts": 0.367}
+    },
     "Sidelite": {
         "TSANx": {"Te": 0.634, "t": 3.2, "Tts": 0.720},
         "TSA3+": {"Te": 0.496, "t": 3.2, "Tts": 0.619},
-        "Inshade": {"Te": 0.401, "t": 3.2, "Tts": 0.521}},
+        "TSA5+": {"Te": 0.360, "t": 3.2, "Tts": 0.522},
+        "Inshade": {"Te": 0.401, "t": 3.2, "Tts": 0.521}
+    },
     "Backlite": {
         "TSANx": {"Te": 0.634, "t": 3.2, "Tts": 0.720},
         "TSA3+": {"Te": 0.496, "t": 3.2, "Tts": 0.619},
-        "TSA5+": {"Te": 0.360, "t": 3.2, "Tts": 0.522}},
+        "TSA5+": {"Te": 0.360, "t": 3.2, "Tts": 0.522}
+    },
     "Roof": {
         "VG10": {"Te": 0.1, "t":3.85, "Tts": 0.336},
-        "VG20": {"Te": 0.165, "t":3.85, "Tts": 0.383}}
+        "VG20": {"Te": 0.165, "t":3.85, "Tts": 0.383},
+         "CLR(IRR coating)//VG10": {"Te": 0.101, "t": 5.0, "Tts": 0.230}
+    }
 }
 
 if "glass_props_session" not in st.session_state:
@@ -70,21 +77,12 @@ if city == "➕ Add Custom Weather":
             }
             st.success(f"City '{new_city_name}' added.")
             # Optionally reset the selectbox to new city
-            st.rerun()
+            st.experimental_rerun()
 
 else:
     weather = st.session_state.city_weather_session[city]
     #st.write(f"Selected city weather data: {weather}")
-with st.expander("🗑️ Manage Custom wetaher", expanded=False):
-    default_cities = list(city_weather.keys())
-    custom_cities = [c for c in st.session_state.city_weather_session if c not in default_cities]
-    if custom_cities:
-        city_to_delete = st.selectbox("Select custom city to delete", custom_cities, key="delete_city")
-        if st.button("Delete Selected City"):
-            del st.session_state.city_weather_session[city_to_delete]
-            st.success(f"✅ City '{city_to_delete}' deleted.")
-            st.rerun()
-    
+
 # Glass selector function
 def glass_selector(position):
     glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
@@ -120,20 +118,6 @@ t_ws, Te_ws, Tts_ws = glass_selector("Windshield")
 t_sl, Te_sl, Tts_sl = glass_selector("Sidelite")
 t_bl, Te_bl, Tts_bl = glass_selector("Backlite")
 t_roof, Te_roof, Tts_roof = glass_selector("Roof")
-
-# ------------------ Delete Custom Glass ------------------
-with st.expander("🗑️ Manage Custom Glass Types", expanded=False):
-    for position in ["Windshield", "Sidelite", "Backlite", "Roof"]:
-        default_glasses = list(glass_props[position].keys())
-        custom_glasses = [g for g in st.session_state.glass_props_session[position] if g not in default_glasses]
-        
-        if custom_glasses:
-            st.subheader(position)
-            glass_to_delete = st.selectbox(f"Select glass to delete from {position}", custom_glasses, key=f"del_{position}")
-            if st.button(f"Delete from {position}", key=f"btn_{position}"):
-                del st.session_state.glass_props_session[position][glass_to_delete]
-                st.success(f"✅ Glass '{glass_to_delete}' deleted from {position}.")
-                st.rerun()
 
 # Build input row
 input_row = pd.DataFrame([{
