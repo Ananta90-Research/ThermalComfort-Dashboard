@@ -129,25 +129,30 @@ input_row = pd.DataFrame([{
     "Te(BL)": Te_bl, "Tts(BL)": Tts_bl,
     "Te(roof)": Te_roof, "Tts(roof)": Tts_roof
 }])
-if st.button("🔍 Predict Cabin Temperature"):
+
+if st.button("Predict Cabin Temperature"):
+    # Run prediction
     prediction = model.predict(input_row)[0]
-    st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
     pred_value = round(prediction, 2)
 
-# Add to history
-st.session_state.pred_history.append(pred_value)
+    # Update history
+    st.session_state.pred_history.append(pred_value)
 
-# ---------------- Display ----------------
-st.success(f"🌡️ Latest Predicted Cabin Temperature: {pred_value} °C")
+    # Show latest result
+    st.success(f"🌡️ Predicted Cabin Temperature: {pred_value} °C")
 
+# ---- History Section ----
 st.subheader("📦 Previous Predictions")
+
 if st.button("🗑️ Clear History (Keep Latest)"):
     if st.session_state.pred_history:
         st.session_state.pred_history = [st.session_state.pred_history[-1]]
-        st.success("Old history cleared, latest kept!")
+        st.success("History cleared, kept latest.")
 
 if len(st.session_state.pred_history) > 1:
-    prev_values = st.session_state.pred_history[:-1]
-    st.text("\n".join([f"{i+1}. {val} °C" for i, val in enumerate(prev_values)]))
+    st.write("History:")
+    for i, val in enumerate(st.session_state.pred_history[:-1], 1):
+        st.write(f"{i}. {val} °C")
 else:
     st.write("No previous predictions yet.")
+
