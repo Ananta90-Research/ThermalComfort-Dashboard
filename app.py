@@ -50,7 +50,7 @@ if "pred_history" not in st.session_state:
     st.session_state.pred_history = []
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Thermal comfort Predictor", layout="wide")
+st.set_page_config(page_title="Thermal comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
 # ---------------- Layout Columns ----------------
@@ -151,5 +151,6 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
 
 
