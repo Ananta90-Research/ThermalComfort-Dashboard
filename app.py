@@ -39,7 +39,7 @@ glass_props = {
     },
 }
 
-# ---------------- Session State Initialization ----------------
+# ---------------- Session State ----------------
 if "glass_props_session" not in st.session_state:
     st.session_state.glass_props_session = copy.deepcopy(glass_props)
 if "city_weather_session" not in st.session_state:
@@ -48,7 +48,7 @@ if "pred_history" not in st.session_state:
     st.session_state.pred_history = []
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Thermal Comfort Predictor", layout="centered")
+st.set_page_config(page_title="Thermal Comfort Predictor", layout="wide")
 st.title("🚗 Thermal Comfort Dashboard")
 
 # ---------------- CSS Styling ----------------
@@ -57,10 +57,14 @@ st.markdown("""
 .big-label {
     font-size:20px;
     font-weight:bold;
-    margin-bottom:1px;
+    margin-bottom:0px;
 }
 .small-text {
     font-size:14px;
+    margin-bottom:0px;
+}
+.stSlider, .stSelectbox, .stTextInput {
+    margin-bottom:5px;
 }
 .stButton>button {
     font-size:16px;
@@ -72,9 +76,9 @@ st.markdown("""
 col1, col2 = st.columns([1.5, 1.2])
 
 with col1:
-    # City Selection
+    # ---------------- City Selection ----------------
     st.markdown('<p class="big-label">Select City</p>', unsafe_allow_html=True)
-    city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"] 
+    city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]
     city = st.selectbox("", city_options)
 
     if city == "➕ Add Custom Weather":
@@ -104,7 +108,7 @@ with col1:
     else:
         weather = st.session_state.city_weather_session[city]
 
-    # Glass Selector Function
+    # ---------------- Glass Selector Function ----------------
     def glass_selector(position):
         st.markdown(f'<p class="big-label">{position} Glass</p>', unsafe_allow_html=True)
         glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
@@ -127,7 +131,6 @@ with col1:
                     else:
                         st.warning("Name exists or is empty.")
 
-        # Return selected or fallback
         props = st.session_state.glass_props_session[position].get(selected)
         if not props:
             fallback = list(st.session_state.glass_props_session[position].values())[0]
@@ -168,5 +171,3 @@ with col2:
             st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
-
-
