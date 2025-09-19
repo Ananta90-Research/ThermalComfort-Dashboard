@@ -48,7 +48,7 @@ if "pred_history" not in st.session_state:
     st.session_state.pred_history = []
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Thermal Comfort Predictor", layout="wide")
+st.set_page_config(page_title="Thermal Comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
 # ---------------- CSS Styling ----------------
@@ -168,3 +168,4 @@ with col2:
             st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
