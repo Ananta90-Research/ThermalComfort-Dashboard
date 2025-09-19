@@ -39,76 +39,35 @@ glass_props = {
     },
 }
 
-# ---------------- Session State ----------------
+# ---------------- Session State Initialization ----------------
 if "glass_props_session" not in st.session_state:
     st.session_state.glass_props_session = copy.deepcopy(glass_props)
+
 if "city_weather_session" not in st.session_state:
     st.session_state.city_weather_session = copy.deepcopy(city_weather)
+
 if "pred_history" not in st.session_state:
     st.session_state.pred_history = []
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Thermal Comfort Predictor", layout="centered")
+st.set_page_config(page_title="Thermal comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
-# ---------------- CSS Styling ----------------
-st.markdown("""
-<style>
-.big-label {
-    font-size:20px;
-    font-weight:bold;
-    margin-bottom:0px;
-}
-.small-text {
-    font-size:14px;
-    margin-bottom:0px;
-}
-.stSlider, .stSelectbox, .stTextInput {
-    margin-bottom:5px;
-}
-.stButton>button {
-    font-size:16px;
-}
-<style>
-/* Reduce space between label and selectbox */
-div[data-baseweb="select"] > div:first-child {
-    margin-bottom: 0px !important;
-}
-
-/* Reduce space between label and text input */
-div.stTextInput>div>label {
-    margin-bottom: 0px !important;
-}
-
-/* Reduce vertical spacing for sliders */
-div.stSlider>div>label {
-    margin-bottom: 0px !important;
-}
-
-/* Optional: Reduce padding inside the component box */
-div.stSelectbox > div {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-}
-</style>
-""", unsafe_allow_html=True)
 # ---------------- Layout Columns ----------------
-col1, spacer, col2 = st.columns([2, 0.1, 2]) 
+col1, spacer, col2 = st.columns([2, 0.1, 2])
 
 with col1:
-    # ---------------- City Selection ----------------
-    st.markdown('<p class="big-label">Select City</p>', unsafe_allow_html=True)
-    city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]
-    city = st.selectbox("", city_options)
+    # City Selection
+    city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"] 
+    city = st.selectbox("Select City", city_options)
 
     if city == "➕ Add Custom Weather":
-        st.markdown('<p class="big-label">Add Custom City</p>', unsafe_allow_html=True)
-        new_city_name = st.text_input("City Name")
+        new_city_name = st.text_input("Enter new city name")
         temp = st.slider("Ambient Temperature (°C)", 20, 50, 35)
         solar = st.slider("Solar Flux (W/m²)", 500, 1200, 900)
         humidity = st.slider("Humidity (%)", 10, 100, 50)
-        wind = st.slider("Wind Speed (km/h)", 0, 30, 5)
-        cloud = st.slider("Cloud Coverage (%)", 0, 100, 20)
+        wind = st.slider("Wind Speed", 0, 10, 5)
+        cloud = st.slider("Cloud Coverage", 0, 10, 5)
 
         if st.button("Add City"):
             if not new_city_name:
@@ -128,11 +87,10 @@ with col1:
     else:
         weather = st.session_state.city_weather_session[city]
 
-    # ---------------- Glass Selector Function ----------------
+    # Glass Selector Function
     def glass_selector(position):
-        st.markdown(f'<p class="big-label">{position} Glass</p>', unsafe_allow_html=True)
         glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
-        selected = st.selectbox("", glass_list, key=position)
+        selected = st.selectbox(f"{position} Glass Type", glass_list, key=position)
 
         if selected == "➕ Add New Glass Type":
             with st.expander(f"Add New Glass Type to {position}"):
@@ -149,10 +107,11 @@ with col1:
                         st.success(f"✅ Added '{new_name}' to {position}")
                         st.experimental_rerun()
                     else:
-                        st.warning("Name exists or is empty.")
+                        st.warning("Name exists or is empty. Please enter a unique name.")
 
-        props = st.session_state.glass_props_session[position].get(selected)
-        if not props:
+        # Return selected or fallback
+        props = st.session_state.glass_props_session[position].get(selected, None)
+        if props is None:
             fallback = list(st.session_state.glass_props_session[position].values())[0]
             return fallback["Te"], fallback["Tts"]
         return props["Te"], props["Tts"]
@@ -163,7 +122,8 @@ with col1:
     Te_roof, Tts_roof = glass_selector("Roof")
 
 with col2:
-    st.markdown('<p class="big-label">Prediction Results</p>', unsafe_allow_html=True)
+    st.header("📊 Prediction Results")
+
     input_row = pd.DataFrame([{
         "SolarFlux": weather["SolarFlux"],
         "Temperature": weather["Temperature"],
@@ -180,17 +140,14 @@ with col2:
         prediction = model.predict(input_row)[0]
         pred_value = round(prediction, 2)
         st.session_state.pred_history.append(pred_value)
-        st.markdown(f'<p class="small-text">🌡️ Predicted Cabin Temperature: <b>{pred_value} °C</b></p>', unsafe_allow_html=True)
+        st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
 
-    st.markdown('<p class="big-label">Previous Predictions</p>', unsafe_allow_html=True)
+    st.subheader("📦 Previous Predictions")
     if st.button("🗑️ Clear History"):
         st.session_state.pred_history = []
 
     if st.session_state.pred_history:
-        for i, val in enumerate(st.session_state.pred_history, 1):
-            st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
+        hist_df = pd.DataFrame(st.session_state.pred_history, columns=["Cabin_Air_Temperature (°C)"])
+        st.table(hist_df)
     else:
         st.write("No predictions yet.")
-
-
-
