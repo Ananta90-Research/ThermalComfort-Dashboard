@@ -123,7 +123,6 @@ with col1:
 
 with col2:
     st.subheader("📊 Prediction Results")
-
     input_row = pd.DataFrame([{
         "SolarFlux": weather["SolarFlux"],
         "Temperature": weather["Temperature"],
@@ -151,9 +150,3 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
-
-
-
-
-
-
