@@ -63,11 +63,11 @@ with col1:
 
     if city == "➕ Add Custom Weather":
         new_city_name = st.text_input("Enter new city name")
-        temp = st.slider("Ambient Temperature (°C)", 20, 50, 35)
-        solar = st.slider("Solar Flux (W/m²)", 500, 1200, 900)
-        humidity = st.slider("Humidity (%)", 10, 100, 50)
-        wind = st.slider("Wind Speed", 0, 10, 5)
-        cloud = st.slider("Cloud Coverage", 0, 10, 5)
+        temp = st.slider("🌡️ Ambient Temperature (°C)", 20, 50, 35)
+        solar = st.slider("☀️ Solar Flux (W/m²)", 500, 1200, 900)
+        humidity = st.slider("💧 Humidity (%)", 10, 100, 50)
+        wind = st.slider("🌬️ Wind Speed (m/s)", 0, 10, 5)
+        cloud = st.slider("☁️ Cloud Coverage (0-10)", 0, 10, 5)
 
         if st.button("Add City"):
             if not new_city_name:
@@ -151,6 +151,7 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
 
 
 
