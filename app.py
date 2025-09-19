@@ -57,7 +57,7 @@ st.markdown("""
 .big-label {
     font-size:20px;
     font-weight:bold;
-    margin-bottom:0px;
+    margin-bottom:1px;
 }
 .small-text {
     font-size:14px;
@@ -168,4 +168,5 @@ with col2:
             st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
 
