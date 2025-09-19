@@ -151,15 +151,3 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
-
-
-
-
-
-
-
-
-
-
-
-
