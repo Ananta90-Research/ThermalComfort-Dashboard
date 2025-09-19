@@ -140,7 +140,7 @@ with col2:
         prediction = model.predict(input_row)[0]
         pred_value = round(prediction, 2)
         st.session_state.pred_history.append(pred_value)
-        st.success(f"🌡️ Predicted Cabin Temperature: {pred_value} °C")
+        st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
 
     st.subheader("📦 Prediction History")
     if st.button("🗑️ Clear History"):
@@ -152,3 +152,4 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
