@@ -51,7 +51,7 @@ if "pred_history" not in st.session_state:
 st.markdown("""
 <style>
 .big-label {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -75,7 +75,7 @@ col1, spacer, col2 = st.columns([2, 0.1, 2])
 with col1:
     st.markdown("<p class='big-label'>Select City</p>", unsafe_allow_html=True)
     city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]
-    city = st.selectbox(city_options)
+    city = st.selectbox("", city_options)
 
     if city == "➕ Add Custom Weather":
         new_city_name = st.text_input("Enter new city name")
@@ -160,4 +160,5 @@ with col2:
             st.markdown(f"<p class='smaller-text'>{i}. {val} °C</p>", unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
 
