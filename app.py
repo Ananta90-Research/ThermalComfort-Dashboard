@@ -58,7 +58,7 @@ col1, col2 = st.columns([2, 1])
 
 with col1:
     # City Selection
-    city_options = list(st.session_state.city_weather_session.keys()) + ["➕ Add Custom Weather"]
+    city_options = list(st.session_state.city_weather_session.keys()) 
     city = st.selectbox("Select City or Add Custom", city_options)
 
     if city == "➕ Add Custom Weather":
@@ -151,6 +151,7 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
 
 
 
