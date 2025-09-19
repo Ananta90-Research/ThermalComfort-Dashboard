@@ -48,10 +48,27 @@ if "pred_history" not in st.session_state:
     st.session_state.pred_history = []
 
 # ---------------- Page Config ----------------
-st.set_page_config(page_title="Thermal Comfort Predictor", layout="centered")
+st.set_page_config(page_title="Thermal Comfort Predictor", layout="wide")
 st.title("🚗 Thermal Comfort Dashboard")
 
 # ---------------- CSS Styling ----------------
+st.markdown("""
+<style>
+.big-label {
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:0px;
+}
+.small-text {
+    font-size:14px;
+    margin-bottom:0px;
+}
+.stSlider, .stSelectbox, .stTextInput {
+    margin-bottom:5px;
+}
+.stButton>button {
+    font-size:16px;
+}
 st.markdown("""
 <style>
 /* Reduce space between label and selectbox */
@@ -74,6 +91,9 @@ div.stSelectbox > div {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
 }
+</style>
+""", unsafe_allow_html=True)
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -176,5 +196,3 @@ with col2:
             st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
-
-
