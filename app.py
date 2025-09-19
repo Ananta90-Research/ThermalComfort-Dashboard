@@ -93,7 +93,7 @@ div.stSelectbox > div {
 </style>
 """, unsafe_allow_html=True)
 # ---------------- Layout Columns ----------------
-col1, col2 = st.columns([1.5, 1.2])
+col1, spacer, col2 = st.columns([2, 0.1, 2]) 
 
 with col1:
     # ---------------- City Selection ----------------
@@ -191,5 +191,6 @@ with col2:
             st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
 
 
