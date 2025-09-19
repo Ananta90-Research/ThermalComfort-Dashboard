@@ -135,7 +135,7 @@ with col2:
         "Te(roof)": Te_roof, "Tts(roof)": Tts_roof
     }])
 
-    if st.button("🌡️ Predict Cabin Temperature"):
+    if st.button("🔍 Predict Cabin Temperature"):
         prediction = model.predict(input_row)[0]
         pred_value = round(prediction, 2)
         st.session_state.pred_history.append(pred_value)
@@ -150,3 +150,4 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
