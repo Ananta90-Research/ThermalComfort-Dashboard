@@ -145,11 +145,11 @@ with col2:
     st.subheader("📦 Prediction History")
     if st.button("🗑️ Clear History"):
         st.session_state.pred_history = []
-        st.success("History cleared successfully.")
 
     if st.session_state.pred_history:
-        hist_df = pd.DataFrame(st.session_state.pred_history, columns=["Cabin Temp (°C)"])
+        hist_df = pd.DataFrame(st.session_state.pred_history, columns=["Cabin_Air_Temperature (°C)"])
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
 
