@@ -129,9 +129,10 @@ input_row = pd.DataFrame([{
     "Te(BL)": Te_bl, "Tts(BL)": Tts_bl,
     "Te(roof)": Te_roof, "Tts(roof)": Tts_roof
 }])
-
-prediction = model.predict(input_row)[0]
-pred_value = round(prediction, 2)
+if st.button("🔍 Predict Cabin Temperature"):
+    prediction = model.predict(input_row)[0]
+    st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
+    pred_value = round(prediction, 2)
 
 # Add to history
 st.session_state.pred_history.append(pred_value)
