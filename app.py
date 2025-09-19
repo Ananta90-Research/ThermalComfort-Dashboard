@@ -54,7 +54,7 @@ st.set_page_config(page_title="Thermal comfort Predictor", layout="centered")
 st.title("🚗 Thermal Comfort Dashboard")
 
 # ---------------- Layout Columns ----------------
-col1, col2 = st.columns([2, 1])
+col1, col2 = st.columns([2,0.3, 1])
 
 with col1:
     # City Selection
@@ -151,6 +151,7 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
 
 
 
