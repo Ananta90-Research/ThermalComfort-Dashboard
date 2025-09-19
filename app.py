@@ -139,7 +139,7 @@ if st.button("Predict Cabin Temperature"):
     st.session_state.pred_history.append(pred_value)
 
     # Show latest result
-    st.success(f"🌡️ Predicted Cabin Temperature: {pred_value} °C")
+    st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
 
 # ---- History Section ----
 st.subheader("📦 Previous Predictions")
@@ -155,4 +155,5 @@ if len(st.session_state.pred_history) > 1:
         st.write(f"{i}. {val} °C")
 else:
     st.write("No previous predictions yet.")
+
 
