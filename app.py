@@ -106,6 +106,7 @@ with col1:
 
     # ---------------- Glass Selector ----------------
     def glass_selector(position):
+        st.markdown(f"<p class='big-label'>{position} Glass Type</p>", unsafe_allow_html=True)
         glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
         selected = st.selectbox(f"{position} Glass Type", glass_list, key=position)
 
@@ -172,3 +173,4 @@ with col2:
         st.markdown(hist_df.to_html(index=False, classes="history-table"), unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
