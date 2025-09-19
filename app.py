@@ -122,7 +122,7 @@ with col1:
     Te_roof, Tts_roof = glass_selector("Roof")
 
 with col2:
-    st.header("Prediction")
+    st.header("📊 Prediction Results")
 
     input_row = pd.DataFrame([{
         "SolarFlux": weather["SolarFlux"],
@@ -142,7 +142,7 @@ with col2:
         st.session_state.pred_history.append(pred_value)
         st.success(f"🌡️ Predicted Cabin Temperature: **{prediction:.2f} °C**")
 
-    st.subheader("📦 Prediction History")
+    st.subheader("📦 Previous Predictions")
     if st.button("🗑️ Clear History"):
         st.session_state.pred_history = []
 
@@ -151,6 +151,7 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
 
 
 
