@@ -165,4 +165,5 @@ with col2:
         hist_df = pd.DataFrame(st.session_state.pred_history, columns=["Cabin_Air_Temperature (°C)"])
         st.table(hist_df)
     else:
-        st.markdown("<p clas
+        st.markdown("<p class='small-font'>No predictions yet.</p>", unsafe_allow_html=True)
+
