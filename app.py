@@ -39,8 +39,18 @@ st.markdown("""
     font-weight: bold;
     margin-bottom: 0px;
 }
+.compact-label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 0px;
+}
 .smaller-text {
     font-size: 14px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.stSelectbox>div>div>label {
+    margin-bottom: 0px;
 }
 .stButton>button {
     height: 2.5em;
@@ -86,7 +96,7 @@ with col1:
         weather = st.session_state.city_weather_session[city]
 
     def glass_selector(position):
-        st.markdown(f'<p class="big-label">{position} Glass</p>', unsafe_allow_html=True)
+        st.markdown(f'<p class="compact-label">{position} Glass</p>', unsafe_allow_html=True)
         glass_list = list(st.session_state.glass_props_session[position].keys()) + ["➕ Add New Glass Type"]
         selected = st.selectbox("", glass_list, key=position)
 
@@ -110,6 +120,7 @@ with col1:
             return fallback["Te"], fallback["Tts"]
         return props["Te"], props["Tts"]
 
+    # Glass selectors (compact spacing)
     Te_ws, Tts_ws = glass_selector("Windshield")
     Te_sl, Tts_sl = glass_selector("Sidelite")
     Te_bl, Tts_bl = glass_selector("Backlite")
