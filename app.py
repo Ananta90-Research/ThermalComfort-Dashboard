@@ -69,7 +69,6 @@ st.markdown("""
 .stButton>button {
     font-size:16px;
 }
-st.markdown("""
 <style>
 /* Reduce space between label and selectbox */
 div[data-baseweb="select"] > div:first-child {
@@ -93,10 +92,6 @@ div.stSelectbox > div {
 }
 </style>
 """, unsafe_allow_html=True)
-
-</style>
-""", unsafe_allow_html=True)
-
 # ---------------- Layout Columns ----------------
 col1, col2 = st.columns([1.5, 1.2])
 
@@ -196,3 +191,4 @@ with col2:
             st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
