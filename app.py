@@ -122,7 +122,7 @@ with col1:
     Te_roof, Tts_roof = glass_selector("Roof")
 
 with col2:
-    st.header("📊 Prediction Results")
+    st.subheader("📊 Prediction Results")
 
     input_row = pd.DataFrame([{
         "SolarFlux": weather["SolarFlux"],
@@ -151,3 +151,4 @@ with col2:
         st.table(hist_df)
     else:
         st.write("No predictions yet.")
+
