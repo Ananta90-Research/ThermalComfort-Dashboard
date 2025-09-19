@@ -59,7 +59,7 @@ st.markdown("""
     font-size: 14px;
 }
 .stButton>button {
-    height: 2.5em;
+    height: 1.5em;
     width: 100%;
 }
 </style>
@@ -160,6 +160,7 @@ with col2:
             st.markdown(f"<p class='smaller-text'>{i}. {val} °C</p>", unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
 
 
 
