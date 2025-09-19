@@ -54,20 +54,25 @@ st.title("🚗 Thermal Comfort Dashboard")
 # ---------------- CSS Styling ----------------
 st.markdown("""
 <style>
-.big-label {
-    font-size:20px;
-    font-weight:bold;
-    margin-bottom:0px;
+/* Reduce space between label and selectbox */
+div[data-baseweb="select"] > div:first-child {
+    margin-bottom: 0px !important;
 }
-.small-text {
-    font-size:14px;
-    margin-bottom:0px;
+
+/* Reduce space between label and text input */
+div.stTextInput>div>label {
+    margin-bottom: 0px !important;
 }
-.stSlider, .stSelectbox, .stTextInput {
-    margin-bottom:5px;
+
+/* Reduce vertical spacing for sliders */
+div.stSlider>div>label {
+    margin-bottom: 0px !important;
 }
-.stButton>button {
-    font-size:16px;
+
+/* Optional: Reduce padding inside the component box */
+div.stSelectbox > div {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -171,4 +176,5 @@ with col2:
             st.markdown(f'<p class="small-text">{i}. {val} °C</p>', unsafe_allow_html=True)
     else:
         st.write("No predictions yet.")
+
 
